@@ -6,7 +6,7 @@ import PatientRoute from "./entityRoutes/PatientRoute.js";
 // import AppointmentResourceRoute from "./AppointmentNamespaceRoutes/AppointmentResourceRoute.js";
 
 //obtenerTurno Notification Routes
-import obtenerTurno from "./obtenerTurno/obtenerTurno.js";
+import turno from "./turno/turno.js";
 
 //SendEmail Notification Routes
 import SendEmail from "./NotificationEmail/SendEmail.js";
@@ -17,7 +17,7 @@ import NotificationWpp from "./NotificationWpp/NotificationWpp.js";
 export default {
   entityRoutes: [AppointmentRoute, PatientRoute],
   // AppointmentResourceRoute: [AppointmentResourceRoute],
-  obtenerTurno: [obtenerTurno],
+  turno: [turno],
   NotificationEmail: [SendEmail],
   NotificationWpp: [NotificationWpp],
 };

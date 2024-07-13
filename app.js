@@ -15,7 +15,11 @@ app.set("port", port);
 app.use(express.json());
 app.use(logger("dev"));
 app.use(express.urlencoded({ extended: false }));
-app.use(Cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+app.use(Cors(corsOptions));
 
 //Routes
 app.get("/", (req, res) => res.sendStatus(200));
@@ -41,8 +45,8 @@ for (const route of routes.entityRoutes) {
 // }
 
 // obtenerTurno Routes
-for (const route of routes.obtenerTurno) {
-  app.use("/api/obtenerTurno", route);
+for (const route of routes.turno) {
+  app.use("/api/turno", route);
 }
 
 export default app;
