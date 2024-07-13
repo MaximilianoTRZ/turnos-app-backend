@@ -12,24 +12,23 @@ const port = process.env.PORT || 3000;
 app.set("port", port);
 
 // Middlewares
-app.use( express.json() );
-app.use(logger('dev'));
-app.use( express.urlencoded({ extended: false }) );
-app.use( Cors() );
-
+app.use(express.json());
+app.use(logger("dev"));
+app.use(express.urlencoded({ extended: false }));
+app.use(Cors());
 
 //Routes
-app.get("/", (req,res) => res.sendStatus(200) );
+app.get("/", (req, res) => res.sendStatus(200));
 
 //UtilityRoutes
-app.get('/health', (req,res,next)=> {
-  res.status(200); 
-  res.send('ok')
-})
-app.get('/ready', (req,res,next)=> {
-  res.status(200); 
-  res.send('ok')
-})
+app.get("/health", (req, res, next) => {
+  res.status(200);
+  res.send("ok");
+});
+app.get("/ready", (req, res, next) => {
+  res.status(200);
+  res.send("ok");
+});
 
 //EntityRoutes
 for (const route of routes.entityRoutes) {
@@ -37,8 +36,13 @@ for (const route of routes.entityRoutes) {
 }
 
 //AppointmentNamespace Routes
-for (const route of routes.AppointmentNamespaceRoutes) {
-  app.use("/api/AppointmentNamespace", route);
+// for (const route of routes.AppointmentNamespaceRoutes) {
+//   app.use("/api/AppointmentNamespace", route);
+// }
+
+// obtenerTurno Routes
+for (const route of routes.obtenerTurno) {
+  app.use("/api/obtenerTurno", route);
 }
 
 export default app;
