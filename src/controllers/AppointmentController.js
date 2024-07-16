@@ -1,4 +1,5 @@
 import Appointment from "../Models/Appointment.js";
+import { AppointStatus } from "../utils/globals.js";
 
 export default {
   getAll: async (req, res, next) => {
@@ -38,11 +39,16 @@ export default {
     const reqAppointment = req.body.Appointment;
 
     try {
-      let result = await Appointment.updateOne({ _id }, reqAppointment);
-      res.json(result);
+      // check if status is in the AppointStatus enum
+      if (Object.values(AppointStatus).includes(reqAppointment.status)) {
+        let result = await Appointment.updateOne({ _id }, reqAppointment);
+        return res.json(result);
+      } else {
+        return res.json({ message: "Invalid status" });
+      }
     } catch (err) {
       console.log(err);
-      res.status(500).json(err);
+      return res.status(500).json(err);
     }
   },
 
