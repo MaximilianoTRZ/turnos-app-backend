@@ -66,6 +66,7 @@ router.get("/consultar" /*validateAuth,*/, async (req, res) => {
 
   const appont_patient_data = list_appointment.map((el) => {
     return {
+      _id: el._id,
       date: el.date,
       type: el.type,
       status: el.status,
