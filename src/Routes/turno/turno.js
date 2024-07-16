@@ -1,52 +1,65 @@
 import { Router } from "express";
 import Patient from "../../Models/Patient.js";
+import { AppointStatus, AppointType } from "../../utils/globals.js";
+import Appointment from "../../Models/Appointment.js";
 
 const router = Router();
 
 router.post("/new", async (req, res) => {
-  let patient = {};
+  let foundPatient = {};
+  let newAppointment = {};
+  let firstTime = false;
   try {
-    const { email, phone } = req.body.formData;
+    const { patient, appointment } = req.body.formData;
+    const { dni, email, phone } = patient;
+    console.log(patient);
 
-    if (!email && !phone) {
+    if (!dni && !email && !phone) {
       res.status(404).json({
-        message: "You must introduce an email or a phone number to continue.",
+        message:
+          "You must introduce an dni, email and a phone number to continue.",
       });
     }
 
-    /*TODO: Determinate if this is gonna be by phone or email
-     * La idea de que sea por telefono es para el recordatorio por wpp
-     */
-    // busqueda condicional por email o phone
-    patient = await Patient.findOne({
-      $or: [{ email: email }, { phone: phone }],
+    foundPatient = await Patient.findOne({
+      $or: [{ dni: dni }, { email: email }, { phone: phone }],
     });
-    console.log(`----------------------`);
-    console.log(`Patient: ${patient}`);
-    console.log(`----------------------`);
+
+    if (!foundPatient) {
+      foundPatient = new Patient(patient);
+      await foundPatient.save();
+      firstTime = true;
+      console.log({
+        message: "Patient not found. It has been created successfully.",
+        patient: foundPatient,
+      });
+    }
+
+    // verificar si el turno (dia y hora) esta disponible
+    // verifyAppointment(appointment)
+
+    newAppointment = new Appointment({
+      ...appointment,
+      status: AppointStatus.APPOINTED,
+      type: firstTime
+        ? AppointType["FIRST-TIME"]
+        : AppointType["NOT-FIRST-TIME"],
+      patientId: foundPatient._id,
+    });
+
+    await newAppointment.save();
   } catch (error) {
     console.log(error);
   }
 
-  if (!patient) {
-    //si no existe el paciente, lo crea
-    // patient = new Patient(data.patient);
-    // await patient.save();
-    res.status(404).json({ message: "Patient not found." });
-  }
-
-  // const turno = new Turno({
-  //   ...data.turno,
-  //   patientId: patient._id,
-  // });
-
-  // await turno.save();
-
-  // return { turno, patient };
-  res.json({ res: "en proceso...", patient: patient });
+  return res.status(200).json({
+    res: "Turno asignado correctamente.",
+    patient: foundPatient,
+    appointment: newAppointment,
+  });
 });
 
-router.get("/consultar", (req, res) => {
+router.get("/consultar" /*validateAuth,*/, (req, res) => {
   res.send("consultarTurno");
 });
 export default router;
