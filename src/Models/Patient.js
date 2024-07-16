@@ -12,7 +12,7 @@ const PatientSchema = new mongoose.Schema({
     unique: false,
   },
   dni: {
-    type: Number,
+    type: String,
     required: true,
     unique: true,
   },

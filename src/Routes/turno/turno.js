@@ -10,7 +10,7 @@ router.post("/new", async (req, res) => {
   let newAppointment = {};
   let firstTime = false;
   try {
-    const { patient, appointment } = req.body.formData;
+    const { patient, appointment } = req.body;
     const { dni, email, phone } = patient;
     console.log(patient);
 

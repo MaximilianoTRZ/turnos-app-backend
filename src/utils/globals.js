@@ -2,7 +2,7 @@
 export const AppointStatus = Object.freeze({
   APPOINTED: "APPOINTED",
   COMFIRMED: "COMFIRMED",
-  CANCELED: "CANCELED",
+  CANCELED: "CANCELLED",
   COMPLETED: "COMPLETED",
 });
 
