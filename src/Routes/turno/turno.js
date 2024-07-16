@@ -59,7 +59,23 @@ router.post("/new", async (req, res) => {
   });
 });
 
-router.get("/consultar" /*validateAuth,*/, (req, res) => {
-  res.send("consultarTurno");
+router.get("/consultar" /*validateAuth,*/, async (req, res) => {
+  const list_appointment = await Appointment.find();
+  const list_patientId = list_appointment.map((el) => el.patientId);
+  const list_patient = await Patient.find({ _id: { $in: list_patientId } });
+
+  const appont_patient_data = list_appointment.map((el) => {
+    return {
+      date: el.date,
+      type: el.type,
+      status: el.status,
+      description: el.description,
+      patient: list_patient.some((patient) => patient._id.equals(el.patientId))
+        ? list_patient.find((patient) => patient._id.equals(el.patientId))
+        : "patient not found",
+    };
+  });
+
+  return res.status(200).json(appont_patient_data);
 });
 export default router;
