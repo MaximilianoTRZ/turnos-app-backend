@@ -40,11 +40,14 @@ export default {
 
     try {
       // check if status is in the AppointStatus enum
-      if (Object.values(AppointStatus).includes(reqAppointment.status)) {
+      if (
+        reqAppointment.status &&
+        !Object.values(AppointStatus).includes(reqAppointment.status)
+      ) {
+        return res.json({ message: "Invalid status" });
+      } else {
         let result = await Appointment.updateOne({ _id }, reqAppointment);
         return res.json(result);
-      } else {
-        return res.json({ message: "Invalid status" });
       }
     } catch (err) {
       console.log(err);
